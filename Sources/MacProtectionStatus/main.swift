@@ -4,6 +4,7 @@ import UserNotifications
 final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private var statusItem: NSStatusItem!
     private let settingsWindowController = SettingsWindowController()
+    private let aboutWindowController = AboutWindowController()
     private let menu = NSMenu()
     private var monitorTimer: Timer?
     private var countdownTimer: Timer?
@@ -101,6 +102,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private func rebuildMenu(statuses: [StatusItem]) {
         menu.removeAllItems()
 
+        let titleHeader = NSMenuItem()
+        titleHeader.view = AppTitleView()
+        menu.addItem(titleHeader)
+        menu.addItem(NSMenuItem.separator())
+
         let summaryHeader = NSMenuItem()
         summaryHeader.view = SummaryBadgeView(statuses: statuses)
         menu.addItem(summaryHeader)
@@ -174,6 +180,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         settingsItem.target = self
         menu.addItem(settingsItem)
 
+        let aboutItem = NSMenuItem(
+            title: L10n.string(ko: "앱 정보", en: "About"),
+            action: #selector(openAbout),
+            keyEquivalent: ""
+        )
+        aboutItem.target = self
+        menu.addItem(aboutItem)
+
         menu.addItem(NSMenuItem.separator())
         let quitItem = NSMenuItem(
             title: L10n.string(ko: "종료", en: "Quit"),
@@ -196,6 +210,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         settingsWindowController.show()
     }
 
+    @objc private func openAbout() {
+        aboutWindowController.show()
+    }
+
     @objc private func openSoftwareUpdate() {
         if let url = URL(string: "x-apple.systempreferences:com.apple.preferences.softwareupdate") {
             NSWorkspace.shared.open(url)
@@ -205,6 +223,27 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     @objc private func openResolveURL(_ sender: NSMenuItem) {
         guard let url = sender.representedObject as? URL else { return }
         NSWorkspace.shared.open(url)
+    }
+}
+
+/// Custom menu row: the app's display name, shown at the very top of the menu.
+final class AppTitleView: NSView {
+    init() {
+        super.init(frame: NSRect(x: 0, y: 0, width: MenuLayout.contentWidth, height: 26))
+
+        let label = NSTextField(labelWithString: "MacProtectionStatus")
+        label.font = NSFont.boldSystemFont(ofSize: 13)
+        label.translatesAutoresizingMaskIntoConstraints = false
+
+        addSubview(label)
+        NSLayoutConstraint.activate([
+            label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 14),
+            label.centerYAnchor.constraint(equalTo: centerYAnchor),
+        ])
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }
 

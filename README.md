@@ -67,6 +67,12 @@ It then:
 We previously shipped a `.pkg` installer (`pkgbuild`) instead — see [archive/README.md](archive/README.md)
 for why that was dropped in favor of the DMG.
 
+**Known issue:** on newer macOS, `create-dmg` 1.3.0's bundled AppleScript can fail with
+`statusbar visible of container window ... (-10006)`. If you hit that, wrap the `set statusbar
+visible to false` lines in `try`/`end try` in
+`$(brew --prefix)/Cellar/create-dmg/*/share/create-dmg/support/template.applescript` — it's a
+harmless property set failing on newer Finder, not a real error.
+
 ## License
 
 MIT
