@@ -6,9 +6,9 @@ macOS doesn't need third-party antivirus software — it ships with built-in pro
 
 ## Download
 
-Grab the latest `.pkg` installer from the [Releases](../../releases) page.
+Grab the latest `.dmg` from the [Releases](../../releases) page, open it, and drag `MacProtectionStatus.app` onto the **Applications** shortcut inside.
 
-The installer is currently unsigned (no Apple Developer ID certificate). On first launch, right-click the `.pkg` → **Open**, or approve it under **System Settings → Privacy & Security → Open Anyway**.
+The app is currently unsigned (no Apple Developer ID certificate). On first launch, right-click the app → **Open**, or approve it under **System Settings → Privacy & Security → Open Anyway**.
 
 ## What it shows
 
@@ -35,8 +35,8 @@ cd MacProtectionStatus
 ./build_app.sh
 open MacProtectionStatus.app
 
-# Or build a distributable .pkg installer
-./build_pkg.sh
+# Or build a distributable .dmg (drag-to-Applications installer)
+./build_dmg.sh
 ```
 
 ## License
