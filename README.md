@@ -39,6 +39,34 @@ open MacProtectionStatus.app
 ./build_dmg.sh
 ```
 
+`build_app.sh` code-signs the bundle: a Developer ID Application certificate
+if `security find-identity` finds one installed (or one is passed via the
+`DEVELOPER_ID_APPLICATION` env var), otherwise it falls back to an ad-hoc
+signature for local use.
+
+### Building the DMG
+
+`build_dmg.sh` requires [`create-dmg`](https://github.com/create-dmg/create-dmg):
+
+```bash
+brew install create-dmg
+```
+
+It then:
+
+1. Runs `build_app.sh` to produce `MacProtectionStatus.app`.
+2. Runs `scripts/generate_dmg_background.swift` to render `Resources/dmg_background.png` —
+   the DMG window's background image (app icon → arrow → Applications folder, with an install
+   hint). The copy is Korean if the machine *running the build* is set to Korean, English
+   otherwise (`Locale.current.language.languageCode`). This only reflects the build machine's
+   language, not the end user's, since the image is baked in at build time — there's no runtime
+   locale switch inside a DMG.
+3. Runs `create-dmg` to lay out a Finder window (app icon, `Applications` symlink, background)
+   and compress it into `MacProtectionStatus.dmg`.
+
+We previously shipped a `.pkg` installer (`pkgbuild`) instead — see [archive/README.md](archive/README.md)
+for why that was dropped in favor of the DMG.
+
 ## License
 
 MIT

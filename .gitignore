@@ -6,3 +6,4 @@ MacProtectionStatus.app/
 *.pkg
 *.dmg
 .dmg_staging/
+/Resources/dmg_background.png
